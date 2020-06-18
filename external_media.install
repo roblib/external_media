@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ */
+function external_media_widget_uninstall() {
+  // Cleanup state variables.
+  \Drupal::state()->delete('external_media_widget.info');
+}

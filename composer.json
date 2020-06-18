@@ -1,0 +1,21 @@
+{
+  "name": "External Media",
+  "type": "drupal-module",
+  "description": "Field widget to upload files and images from third-party services.",
+  "authors": [
+    {
+      "name": "Minnur Yunusov",
+      "homepage": "https://www.minnur.com",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/external_media",
+    "source": "http://cgit.drupalcode.org/external_media"
+  },
+  "require": {
+    "espresso-dev/instagram-basic-display-php": "^1.1",
+    "unsplash/unsplash": "^2.5",
+    "zoonman/pixabay-php-api": "^1.0"
+  }
+}

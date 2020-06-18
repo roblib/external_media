@@ -1,0 +1,6 @@
+external_media.settings:
+  route_name: external_media.settings
+  title: 'External Media'
+  description: 'Configure External Media settings.'
+  parent: system.admin_config_media
+  weight: 25

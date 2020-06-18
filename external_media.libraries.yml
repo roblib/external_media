@@ -1,0 +1,21 @@
+external_media.core:
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/drupalSettings
+  js:
+    js/core.js: {}
+  css: 
+    theme:
+      css/core.css: {}
+
+external_media.form:
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/drupalSettings
+  js:
+    js/form.js: {}
+  css: 
+    theme:
+      css/form.css: {}

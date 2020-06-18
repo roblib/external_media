@@ -1,0 +1,13 @@
+services:
+  plugin.manager.external_media:
+    class: Drupal\external_media\Plugin\ExternalMediaManager
+    parent: default_plugin_manager
+
+  external_media:
+    class: Drupal\external_media\ExternalMedia
+
+  paramconverter.external_media:
+    class: Drupal\external_media\ParamConverter\ExternalMediaConverter
+    arguments: ['@plugin.manager.external_media']
+    tags:
+      - { name: paramconverter }

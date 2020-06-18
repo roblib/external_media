@@ -1,0 +1,7 @@
+name: 'External Media'
+description: 'Field widget to upload files and images from third-party services.'
+configure: external_media.settings
+type: module
+core_version_requirement: ^8 || ^9
+dependencies:
+  - drupal:file

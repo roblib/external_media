@@ -1,0 +1,20 @@
+external_media.settings:
+  path: '/admin/config/media/external-media'
+  defaults:
+    _title: 'External Media'
+    _form: '\Drupal\external_media\Form\ExternalMediaSettings'
+  requirements:
+    _permission: 'administer site configuration'
+
+external_media.redirect_callback:
+  path: '/external-media/redirect/{external_media}'
+  defaults:
+    _title_callback: '\Drupal\external_media\Controller\ExternalMediaController::getTitle'
+    _controller: '\Drupal\external_media\Controller\ExternalMediaController::redirectCallback'
+  options:
+    parameters:
+      external_media:
+        type: external_media
+        converter: paramconverter.external_media
+  requirements:
+    _access: 'TRUE'

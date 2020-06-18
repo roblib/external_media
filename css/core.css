@@ -1,0 +1,29 @@
+.external-media-widget-wrapper .external-media-widget-urls {
+  display: none;
+}
+
+.external-media-widget-wrapper a.button {
+  margin-right: 0em;
+ }
+
+.external-media-widget a.button.disabled {
+  color: #ccc;
+  cursor: default;
+}
+
+.external-media-widget a.button:active {
+  background: #666;
+  color: #fff;
+  border-color: #555;
+  text-shadow: #222 0 -1px 0;
+}
+
+.field--widget-external-media-widget-image .form-submit,
+.field--widget-external-media-widget-file .form-submit {
+  margin-left: 0em;
+  margin-top: 10px;
+}
+
+.external-media-widget-wrapper a.button.dropbox-chooser {
+  line-height: normal !important;
+}
