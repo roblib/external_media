@@ -11,7 +11,26 @@ class ExternalMedia {
    * Get mime type by extension type.
    */
   public function getMimeByExtension($extension) {
-    $extensions = [
+    $extensions = $this->extMimes();
+    if (isset($extensions[$extension])) {
+      return $extensions[$extension];
+    }
+  }
+
+  /**
+   * Get ext by mime.
+   */
+  public function getExtByMime($mime) {
+    $extensions = $this->extMimes();
+    foreach ($extensions as $ext => $mimes) {
+      if (in_array($mime, $mimes)) {
+        return $ext;
+      }
+    }
+  }
+
+  protected function extMimes() {
+    return [
       'hqx' => ['application/mac-binhex40', 'application/mac-binhex', 'application/x-binhex40', 'application/x-mac-binhex40'],
       'cpt' => 'application/mac-compactpro',
       'csv' => ['text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain'],
@@ -158,9 +177,6 @@ class ExternalMedia {
       'vtt' => ['text/vtt', 'text/plain'],
       'ico' => ['image/x-icon', 'image/x-ico', 'image/vnd.microsoft.icon'],
     ];
-    if (isset($extensions[$extension])) {
-      return $extensions[$extension];
-    }
   }
 
 }
