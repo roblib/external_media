@@ -8,7 +8,7 @@
   Drupal.behaviors.ExternalMediaGoogleDrive = {
     attach: function (context, settings) {
 
-      $('.form-type-external-media a.' + settings.google_class, context).unbind().click(function(e) {
+      $('.form-type-external-media a.' + settings.google_class + ', .webform-submission-form a.' + settings.google_class, context).unbind().click(function(e) {
         var clientId = settings.google_client_id;
         var appId = settings.google_app_id;
         var scope = settings.google_scope;

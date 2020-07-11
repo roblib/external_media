@@ -270,7 +270,7 @@ class ExternalMediaBase extends PluginBase implements ExternalMediaInterface, Co
     return [
       'plugin' => $this->getPluginId(),
       'cardinality' => $info['cardinality'],
-      'description' => strip_tags($info['description']),
+      'description' => is_string($info['description']) ? strip_tags($info['description']) : '',
       'max-filesize' => !empty($info['upload_validators']['file_validate_size'][0]) ? $info['upload_validators']['file_validate_size'][0] : '',
       'file-extentions' => join(',', $extensions),
       'multiselect' => !empty($info['multiselect']) ? $info['multiselect'] : '',

@@ -67,7 +67,7 @@ class ExternalMediaSettings extends FormBase {
     if (!$this->moduleHandler->moduleExists('external_media_premium')) {
       $form['premium'] = [
         '#type' => 'inline_template',
-        '#template' => '{% if enabled %}<div class="external-media-premium-msg"><strong>New Premium version of the module is available with support of Unsplash, Instagram, Pexel, Pixabay and AWS. <a href="https://downloads.minnur.com/drupal/external-media-widget" class="button button--primary" target="_blank">Go Premium</a></strong></div>{% endif %}',
+        '#template' => '{% if enabled %}<div class="external-media-premium-msg"><strong>New Premium version of the module is available with support of Unsplash, Instagram, Pexel, Pixabay and AWS or any other Remote URL.<br/>Premium version also includes Webform support.<a href="https://downloads.minnur.com/drupal/external-media-premium" class="button button--primary" target="_blank">Go Premium</a></strong></div>{% endif %}',
         '#context' => [
           'enabled' => TRUE,
         ],

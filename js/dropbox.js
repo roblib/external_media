@@ -8,7 +8,7 @@
   Drupal.behaviors.ExternalMediaDropbox = {
     attach: function (context, settings) {
 
-      $('.form-type-external-media a.' + settings.dropbox_class, context).unbind().click(function(e) {
+      $('.form-type-external-media a.' + settings.dropbox_class + ', .webform-submission-form a.' + settings.dropbox_class, context).unbind().click(function(e) {
         var $parent = $(this).parent().parent();
         var _plugin = $(this).data('plugin'); // required
         var _max_filesize = $(this).data('max-filesize');

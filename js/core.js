@@ -6,7 +6,7 @@
     attach: function (context, settings) {
 
       // Hide Upload element. Replace it with custom options.
-      $('.form-type-external-media', context).each(function() {
+      $('.form-type-external-media, .webform-submission-form', context).each(function() {
         if ($(this).find('.external-media-widget-wrapper').length) {
           $(this).find('input[type=file]').hide();
           $(this).find('input[type=submit]').hide();
@@ -15,13 +15,13 @@
       });
 
       // Trigger file upload browser
-      $('.form-type-external-media a.browse', context).unbind().click(function(e) {
+      $('.form-type-external-media a.browse, .webform-submission-form a.browse', context).unbind().click(function(e) {
         var $parent = $(this).closest('.form-managed-file');
         $parent.find('input[type=file]').click();
         e.preventDefault();
       });
 
-      $('.form-type-external-media input.form-file', context).change(function() {
+      $('.form-type-external-media input.form-file, .webform-submission-form input.form-file', context).change(function() {
         var $parent = $(this).parent().parent();
         if ($parent.find('.external-media-widget-wrapper').length) {
           setTimeout(function() {
