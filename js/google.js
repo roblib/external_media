@@ -87,6 +87,9 @@
               })
               .build();
             picker.setVisible(true);
+            // Fix Media Library popup overlay issue.
+            $('.picker-dialog-bg').css('z-index', 99998);
+            $('.picker-dialog').css('z-index', 99999);
           }
         }
 
