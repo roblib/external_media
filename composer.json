@@ -16,6 +16,7 @@
   "require": {
     "espresso-dev/instagram-basic-display-php": "^1.1",
     "unsplash/unsplash": "^2.5",
-    "zoonman/pixabay-php-api": "^1.0"
+    "zoonman/pixabay-php-api": "^1.0",
+    "bynder/bynder-php-sdk": "^2.1"
   }
 }

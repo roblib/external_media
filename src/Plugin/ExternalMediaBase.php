@@ -11,7 +11,7 @@ use Drupal\Core\State\StateInterface;
 use Drupal\Core\Session\SessionManagerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\user\PrivateTempStoreFactory;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\external_media\ExternalMedia;
 
@@ -40,7 +40,7 @@ class ExternalMediaBase extends PluginBase implements ExternalMediaInterface, Co
   protected $externalMedia;
 
   /**
-   * @var \Drupal\user\PrivateTempStoreFactory
+   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
    */
   protected $tempStoreFactory;
 
@@ -79,7 +79,7 @@ class ExternalMediaBase extends PluginBase implements ExternalMediaInterface, Co
     return new static($configuration, $plugin_id, $plugin_definition,
       $container->get('state'),
       $container->get('external_media'),
-      $container->get('user.private_tempstore'),
+      $container->get('tempstore.private'),
       $container->get('session_manager'),
       $container->get('module_handler')
     );
