@@ -14,6 +14,7 @@ use Drupal\Core\Render\Element\FormElement;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\file\Entity\File;
 
 /**
@@ -46,7 +47,7 @@ class ExternalMediaFile extends ManagedFile {
       // Ensure the destination is still valid.
       $destination = $element['#upload_location'];
       $destination_scheme = \Drupal::service('stream_wrapper_manager')->getScheme($destination);
-      \Drupal::service('file_system')->prepareDirectory($destination, FILE_CREATE_DIRECTORY);
+      \Drupal::service('file_system')->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY);
       $fids = [];
       if (strstr($external_urls, '::::')) {
         $file_urls_raw = explode('|', $external_urls);
