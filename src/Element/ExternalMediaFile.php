@@ -45,7 +45,7 @@ class ExternalMediaFile extends ManagedFile {
     if (!empty($external_urls)) {
       // Ensure the destination is still valid.
       $destination = $element['#upload_location'];
-      $destination_scheme = \Drupal::service('file_system')->uriScheme($destination);
+      $destination_scheme = \Drupal::service('stream_wrapper_manager')->getScheme($destination);
       \Drupal::service('file_system')->prepareDirectory($destination, FILE_CREATE_DIRECTORY);
       $fids = [];
       if (strstr($external_urls, '::::')) {
