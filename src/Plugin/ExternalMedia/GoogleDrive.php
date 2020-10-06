@@ -132,7 +132,10 @@ class GoogleDrive extends ExternalMediaBase {
     $client = \Drupal::httpClient();
     $response = $client->request('GET', $remote_url, $options);
     if ($response->getStatusCode() == 200) {
-      return file_save_data($response->getBody()->getContents(), $destination . '/' . $orignal_name);
+      return [
+        'source_data' => $response->getBody()->getContents(),
+        'destination' => $destination . '/' . $orignal_name,
+      ];
     }
   }
 

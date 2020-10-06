@@ -38,26 +38,44 @@ class ExternalMediaFile extends ManagedFile {
    * {@inheritdoc}
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
-    $force_default = FALSE;
     $parents_prefix = implode('_', $element['#parents']);
     $user_input = $form_state->getUserInput();
     $external_urls = !empty($user_input['external_urls'][$parents_prefix]) ? $user_input['external_urls'][$parents_prefix] : NULL;
 
     if (!empty($external_urls)) {
-      // Ensure the destination is still valid.
-      $destination = $element['#upload_location'];
-      $destination_scheme = \Drupal::service('stream_wrapper_manager')->getScheme($destination);
-      \Drupal::service('file_system')->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY);
-      $fids = [];
-      if (strstr($external_urls, '::::')) {
-        $file_urls_raw = explode('|', $external_urls);
-        foreach ($file_urls_raw as $file_url_item) {
-          list($plugin_id, $remote_file) = explode('::::', $file_url_item);
-          $plugin = \Drupal::service('plugin.manager.external_media')->createInstance($plugin_id);
-          $file = $plugin->getFile($remote_file, $destination);
-          $file->save();
-          if ($file) {
-            $fids[] = $file->id();
+
+      // Find the current value of this field.
+      $fids = !empty($input['fids']) ? explode(' ', $input['fids']) : [];
+      foreach ($fids as $key => $fid) {
+        $fids[$key] = (int) $fid;
+      }
+      $force_default = FALSE;
+
+      // Process any input and save new uploads.
+      if ($input !== FALSE) {
+        $input['fids'] = $fids;
+        $return = $input;
+
+        // Ensure the destination is still valid.
+        $destination = $element['#upload_location'];
+        \Drupal::service('file_system')->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY);
+        if (is_string($external_urls) && strstr($external_urls, '::::')) {
+          $file_urls_raw = explode('|', $external_urls);
+          foreach ($file_urls_raw as $file_url_item) {
+            list($plugin_id, $remote_file) = explode('::::', $file_url_item);
+            if ($external_media = \Drupal::service('plugin.manager.external_media')->createInstance($plugin_id)) {
+              if ($item = $external_media->getFile($remote_file, $destination)) {
+                if (!empty($item['source_data'])) {
+                  $file = file_save_data($item['source_data'], $item['destination']);
+                }
+                elseif (!empty($item['source'])) {
+                  $file = system_retrieve_file(trim($item['source']), trim($item['destination']), TRUE);
+                }
+                if (isset($file)) {
+                  $fids[] = $file->id();
+                }
+              }
+            }
           }
         }
       }
@@ -84,14 +102,14 @@ class ExternalMediaFile extends ManagedFile {
           }
         }
       }
+
+      $return['fids'] = $fids;
+      return $return;
     }
     else {
       // Pass regular file upload routine to the parent element.
       return parent::valueCallback($element, $input, $form_state);
     }
-
-    $return['fids'] = $fids;
-    return $return;
   }
 
   /**
@@ -298,9 +316,10 @@ class ExternalMediaFile extends ManagedFile {
       '#class' => 'browse',
       '#attributes' => [],
     ];
-    $inline_templates_rendered = \Drupal::service('renderer')->render($render_inlines);
-    $buttons_rendered = \Drupal::service('renderer')->render($items);
-    $widgets_list_rendered = \Drupal::service('renderer')->render($widgets_list);
+    $renderer = \Drupal::service('renderer');
+    $inline_templates_rendered = $renderer->render($render_inlines);
+    $buttons_rendered = $renderer->render($items);
+    $widgets_list_rendered = $renderer->render($widgets_list);
     $default_file = !empty($parents_prefix) ? $form_state->getValue($parents_prefix) : '';
     $buttons = empty($fids) ? $widgets_list_rendered . $buttons_rendered . $inline_templates_rendered : '';
     if ($browser_only) {

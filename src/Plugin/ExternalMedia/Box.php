@@ -62,7 +62,10 @@ class Box extends ExternalMediaBase {
    */
   public function getFile($url, $destination) {
     list($file_url, $orignal_name) = explode('@@@', $url);
-    return system_retrieve_file($file_url, $destination . '/' . $orignal_name, TRUE);
+    return [
+      'source' => $file_url,
+      'destination' => $destination . '/' . $orignal_name,
+    ];
   }
 
 }

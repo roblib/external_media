@@ -153,11 +153,13 @@ class ExternalMediaFile extends FileWidget {
     // single fid, as field expects single value.
     $new_values = [];
     foreach ($values as &$value) {
-      foreach ($value['fids'] as $fid) {
-        $new_value = $value;
-        $new_value['target_id'] = $fid;
-        unset($new_value['fids']);
-        $new_values[] = $new_value;
+      if (!empty($value['fids'])) {
+        foreach ($value['fids'] as $fid) {
+          $new_value = $value;
+          $new_value['target_id'] = $fid;
+          unset($new_value['fids']);
+          $new_values[] = $new_value;
+        }
       }
     }
 

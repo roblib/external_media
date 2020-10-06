@@ -281,7 +281,10 @@ class ExternalMediaBase extends PluginBase implements ExternalMediaInterface, Co
    * {@inheritdoc}
    */
   public function getFile($url, $destination) {
-    return system_retrieve_file($url, $destination, TRUE);
+    return [
+      'source' => $url,
+      'destination' => $destination,
+    ];
   }
 
   /**
