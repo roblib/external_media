@@ -72,6 +72,15 @@ class ExternalMediaFile extends ManagedFile {
                   $file = system_retrieve_file(trim($item['source']), trim($item['destination']), TRUE);
                 }
                 if (isset($file)) {
+                  $destination_scheme = \Drupal::service('stream_wrapper_manager')->getScheme($destination);
+
+                  if (\Drupal::currentUser()->isAnonymous() && $destination_scheme !== 'public') {
+                    $session = \Drupal::request()->getSession();
+                    $allowed_temp_files = $session->get('anonymous_allowed_file_ids', []);
+                    $allowed_temp_files[$file->id()] = $file->id();
+                    $session->set('anonymous_allowed_file_ids', $allowed_temp_files);
+                  }
+
                   $fids[] = $file->id();
                 }
               }
