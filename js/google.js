@@ -12,6 +12,10 @@
         var clientId = settings.google_client_id;
         var appId = settings.google_app_id;
         var scope = settings.google_scope;
+        var view_id = settings.google_view_id;
+        var mine_only = settings.google_mine_only;
+        var nav_hidden = settings.google_nav_hidden;
+        var support_drives = settings.google_support_drives;
         var pickerApiLoaded = false;
         var oauthToken;
         var _parent_container = $(this).parent().parent();
@@ -41,7 +45,7 @@
         // Create and render a Picker object for searching images.
         function createPicker() {
           if (pickerApiLoaded && oauthToken) {
-            var view = new google.picker.DocsView(google.picker.ViewId.DOCS);
+            var view = new google.picker.View(view_id);
 
             var _plugin = _parent_container.find('a.google-picker').data('plugin'); // required
             var _max_filesize = _parent_container.find('a.google-picker').data('max-filesize');
@@ -52,7 +56,6 @@
             view.setMimeTypes(_extensions);
             view.setIncludeFolders(true);
             var picker = new google.picker.PickerBuilder()
-              .enableFeature(google.picker.Feature.NAV_HIDDEN)
               .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
               .setAppId(appId)
               .setOAuthToken(oauthToken)
@@ -84,8 +87,17 @@
                   });
 
                 }
-              })
-              .build();
+              });
+            if (nav_hidden != '') {
+              picker.enableFeature(google.picker.Feature.NAV_HIDDEN);
+            }
+            if (mine_only != '') {
+              picker.enableFeature(google.picker.Feature.MINE_ONLY);
+            }
+            if (support_drives != '') {
+              picker.enableFeature(google.picker.Feature.SUPPORT_DRIVES);
+            }
+            picker.build();
             picker.setVisible(true);
             // Fix Media Library popup overlay issue.
             $('.picker-dialog-bg').css('z-index', 99998);

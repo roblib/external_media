@@ -52,6 +52,10 @@ class GoogleDrive extends ExternalMediaBase {
         'google_app_id' => $this->getSetting('app_id'),
         'google_scope' => explode('\n', $this->getSetting('scope')),
         'google_class' => $this->getClassName(),
+        'google_view_id' => !empty($this->getSetting('view_id')) ? $this->getSetting('view_id') : 'google.picker.ViewId.DOCS',
+        'google_mine_only' => !empty($this->getSetting('mine_only')) ? $this->getSetting('mine_only') : '',
+        'google_nav_hidden' => !empty($this->getSetting('nav_hidden')) ? $this->getSetting('nav_hidden') : 'true',
+        'google_support_drives' => !empty($this->getSetting('support_drives')) ? $this->getSetting('support_drives') : '',
       ],
     ];
   }
@@ -85,10 +89,44 @@ class GoogleDrive extends ExternalMediaBase {
       '#default_value' => $this->getSetting('app_id'),
       '#description' => $this->t('Its the first number in your Client ID. e.g. <em>886162316824</em>'),
     ];
+    $form[$this->getPluginId()]['googledrive_view_id'] = [
+      '#title' => $this->t('View ID'),
+      '#type' => 'select',
+      '#options' => [
+        'google.picker.ViewId.DOCS' => $this->t('All Google Drive document types'),
+        'google.picker.ViewId.DOCS_IMAGES' => $this->t('Google Drive photos'),
+        'google.picker.ViewId.DOCS_IMAGES_AND_VIDEOS' => $this->t('Google Drive photos and videos'),
+        'google.picker.ViewId.DOCS_VIDEOS' => $this->t('Google Drive videos'),
+        'google.picker.ViewId.DOCUMENTS' => $this->t('Google Drive Documents'),
+        'google.picker.ViewId.DRAWINGS' => $this->t('Google Drive Drawings'),
+        'google.picker.ViewId.FOLDERS' => $this->t('Google Drive Folders'),
+        'google.picker.ViewId.FORMS' => $this->t('Google Drive Forms'),
+        'google.picker.ViewId.PDFS' => $this->t('PDF files stored in Google Drive'),
+        'google.picker.ViewId.PRESENTATIONS' => $this->t('Google Drive Presentations'),
+        'google.picker.ViewId.SPREADSHEETS' => $this->t('Google Drive Spreadsheets'),
+      ],
+      '#default_value' => $this->getSetting('view_id'),
+      '#description' => $this->t('Google Drive document type view.'),
+    ];
+    $form[$this->getPluginId()]['googledrive_mine_only'] = [
+      '#title' => $this->t('Show only documents owned by the user when showing items from Google Drive.'),
+      '#type' => 'checkbox',
+      '#default_value' => !empty($this->getSetting('mine_only')),
+    ];
+    $form[$this->getPluginId()]['googledrive_nav_hidden'] = [
+      '#title' => $this->t('Hide the navigation pane. If the navigation pane is hidden, users can only select from the first view chosen.'),
+      '#type' => 'checkbox',
+      '#default_value' => !empty($this->getSetting('nav_hidden')),
+    ];
+    $form[$this->getPluginId()]['googledrive_support_drives'] = [
+      '#title' => $this->t('Include shared drive items in results.'),
+      '#type' => 'checkbox',
+      '#default_value' => !empty($this->getSetting('support_drives')),
+    ];
     $form[$this->getPluginId()]['googledrive_scope'] = [
       '#title' => $this->t('Scope'),
       '#type' => 'textarea',
-      '#default_value' => !empty($this->getSetting('scope')) ? $this->getSetting('scope') : 'https://www.googleapis.com/auth/drive.file',
+      '#default_value' => !empty($this->getSetting('scope')) ? $this->getSetting('scope') : 'https://www.googleapis.com/auth/drive.readonly',
       '#description' => $this->t('Scope to use to access user\'s Drive items. Please put each scope in it is own line. <a href="https://developers.google.com/picker/docs/#otherviews" target="_blank">See available scopes</a>.'),
     ];
     $form[$this->getPluginId()]['googledrive_instructions'] = [
@@ -115,6 +153,10 @@ class GoogleDrive extends ExternalMediaBase {
       ->setSetting('developer_key', $form_state->getValue('googledrive_developer_key'))
       ->setSetting('client_id', $form_state->getValue('googledrive_client_id'))
       ->setSetting('app_id', $form_state->getValue('googledrive_app_id'))
+      ->setSetting('view_id', $form_state->getValue('googledrive_view_id'))
+      ->setSetting('mine_only', $form_state->getValue('googledrive_mine_only'))
+      ->setSetting('nav_hidden', $form_state->getValue('googledrive_nav_hidden'))
+      ->setSetting('support_drives', $form_state->getValue('googledrive_support_drives'))
       ->setSetting('scope', $form_state->getValue('googledrive_scope'));
   }
 
