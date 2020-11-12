@@ -45,7 +45,19 @@
         // Create and render a Picker object for searching images.
         function createPicker() {
           if (pickerApiLoaded && oauthToken) {
-            var view = new google.picker.View(view_id);
+            var views = {
+              'google.picker.ViewId.DOCS': google.picker.ViewId.DOCS,
+              'google.picker.ViewId.DOCS_IMAGES': google.picker.ViewId.DOCS_IMAGES,
+              'google.picker.ViewId.DOCS_IMAGES_AND_VIDEOS': google.picker.ViewId.DOCS_IMAGES_AND_VIDEOS,
+              'google.picker.ViewId.DOCS_VIDEOS': google.picker.ViewId.DOCS_VIDEOS,
+              'google.picker.ViewId.DOCUMENTS': google.picker.ViewId.DOCUMENTS,
+              'google.picker.ViewId.DRAWINGS': google.picker.ViewId.DRAWINGS,
+              'google.picker.ViewId.FOLDERS': google.picker.ViewId.FOLDERS,
+              'google.picker.ViewId.FORMS': google.picker.ViewId.FORMS,
+              'google.picker.ViewId.PDFS': google.picker.ViewId.PDFS,
+              'google.picker.ViewId.PRESENTATIONS': google.picker.ViewId.PRESENTATIONS,
+              'google.picker.ViewId.SPREADSHEETS': google.picker.ViewId.SPREADSHEETS,
+            };
 
             var _plugin = _parent_container.find('a.google-picker').data('plugin'); // required
             var _max_filesize = _parent_container.find('a.google-picker').data('max-filesize');
@@ -53,17 +65,18 @@
             var _extensions = _parent_container.find('a.google-picker').data('file-extentions');
             var _cardinality = _parent_container.find('a.google-picker').data('cardinality');
 
+            var view = new google.picker.View(views[view_id]);
             view.setMimeTypes(_extensions);
-            view.setIncludeFolders(true);
+
             var picker = new google.picker.PickerBuilder()
               .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
               .setAppId(appId)
               .setOAuthToken(oauthToken)
               .addView(view)
+              .addView(new google.picker.DocsUploadView())
               // Respect Drupal field `Number of values` value.
               .setMaxItems((_cardinality > 0) ? _cardinality : 100)
               .setOrigin(window.location.protocol + '//' + window.location.host)
-              .addView(new google.picker.DocsUploadView())
               .setCallback(function(data) {
                 if (data.action == google.picker.Action.PICKED) {
                   var _links = [];
@@ -87,17 +100,8 @@
                   });
 
                 }
-              });
-            if (nav_hidden != '') {
-              picker.enableFeature(google.picker.Feature.NAV_HIDDEN);
-            }
-            if (mine_only != '') {
-              picker.enableFeature(google.picker.Feature.MINE_ONLY);
-            }
-            if (support_drives != '') {
-              picker.enableFeature(google.picker.Feature.SUPPORT_DRIVES);
-            }
-            picker.build();
+              })
+              .build();
             picker.setVisible(true);
             // Fix Media Library popup overlay issue.
             $('.picker-dialog-bg').css('z-index', 99998);

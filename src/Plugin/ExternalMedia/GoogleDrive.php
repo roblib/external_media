@@ -108,21 +108,6 @@ class GoogleDrive extends ExternalMediaBase {
       '#default_value' => $this->getSetting('view_id'),
       '#description' => $this->t('Google Drive document type view.'),
     ];
-    $form[$this->getPluginId()]['googledrive_mine_only'] = [
-      '#title' => $this->t('Show only documents owned by the user when showing items from Google Drive.'),
-      '#type' => 'checkbox',
-      '#default_value' => !empty($this->getSetting('mine_only')),
-    ];
-    $form[$this->getPluginId()]['googledrive_nav_hidden'] = [
-      '#title' => $this->t('Hide the navigation pane. If the navigation pane is hidden, users can only select from the first view chosen.'),
-      '#type' => 'checkbox',
-      '#default_value' => !empty($this->getSetting('nav_hidden')),
-    ];
-    $form[$this->getPluginId()]['googledrive_support_drives'] = [
-      '#title' => $this->t('Include shared drive items in results.'),
-      '#type' => 'checkbox',
-      '#default_value' => !empty($this->getSetting('support_drives')),
-    ];
     $form[$this->getPluginId()]['googledrive_scope'] = [
       '#title' => $this->t('Scope'),
       '#type' => 'textarea',
