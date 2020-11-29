@@ -12,7 +12,7 @@
         var clientId = settings.google_client_id;
         var appId = settings.google_app_id;
         var scope = settings.google_scope;
-        var view_id = settings.google_view_id;
+        var view_id = settings.google_view_id.split(',');
         var mine_only = settings.google_mine_only;
         var nav_hidden = settings.google_nav_hidden;
         var support_drives = settings.google_support_drives;
@@ -65,14 +65,21 @@
             var _extensions = _parent_container.find('a.google-picker').data('file-extentions');
             var _cardinality = _parent_container.find('a.google-picker').data('cardinality');
 
-            var view = new google.picker.View(views[view_id]);
-            view.setMimeTypes(_extensions);
-
             var picker = new google.picker.PickerBuilder()
               .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
               .setAppId(appId)
               .setOAuthToken(oauthToken)
-              .addView(view)
+              .addView((view_id.indexOf('google.picker.ViewId.DOCS')  == -1) ? false : new google.picker.View(views['google.picker.ViewId.DOCS']).setMimeTypes(_extensions))
+              .addView((view_id.indexOf('google.picker.ViewId.DOCS_IMAGES')  == -1) ? false : views['google.picker.ViewId.DOCS_IMAGES'])
+              .addView((view_id.indexOf('google.picker.ViewId.DOCS_IMAGES_AND_VIDEOS')  == -1) ? false : views['google.picker.ViewId.DOCS_IMAGES_AND_VIDEOS'])
+              .addView((view_id.indexOf('google.picker.ViewId.DOCS_VIDEOS')  == -1) ? false : views['google.picker.ViewId.DOCS_VIDEOS'])
+              .addView((view_id.indexOf('google.picker.ViewId.DOCUMENTS')  == -1) ? false : views['google.picker.ViewId.DOCUMENTS'])
+              .addView((view_id.indexOf('google.picker.ViewId.DRAWINGS')  == -1) ? false : views['google.picker.ViewId.DRAWINGS'])
+              .addView((view_id.indexOf('google.picker.ViewId.FOLDERS')  == -1) ? false : views['google.picker.ViewId.FOLDERS'])
+              .addView((view_id.indexOf('google.picker.ViewId.FORMS')  == -1) ? false : views['google.picker.ViewId.FORMS'])
+              .addView((view_id.indexOf('google.picker.ViewId.PDFS')  == -1) ? false : views['google.picker.ViewId.PDFS'])
+              .addView((view_id.indexOf('google.picker.ViewId.PRESENTATIONS')  == -1) ? false : views['google.picker.ViewId.PRESENTATIONS'])
+              .addView((view_id.indexOf('google.picker.ViewId.SPREADSHEETS')  == -1) ? false : views['google.picker.ViewId.SPREADSHEETS'])
               .addView(new google.picker.DocsUploadView())
               // Respect Drupal field `Number of values` value.
               .setMaxItems((_cardinality > 0) ? _cardinality : 100)

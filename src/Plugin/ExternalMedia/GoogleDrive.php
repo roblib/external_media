@@ -45,6 +45,12 @@ class GoogleDrive extends ExternalMediaBase {
    * {@inheritdoc}
    */
   public function getAttachments() {
+    if (!empty($this->getSetting('view_type')) && $this->getSetting('view_type') == 'selected') {
+      $view_ids = is_array($this->getSetting('view_id')) ? array_filter($this->getSetting('view_id')) : [$this->getSetting('view_id')];
+    }
+    else {
+      $view_ids = ['google.picker.ViewId.DOCS'];
+    }
     return [
       'library' => ['external_media/external_media.' . $this->getPluginId()],
       'drupalSettings' => [
@@ -52,7 +58,7 @@ class GoogleDrive extends ExternalMediaBase {
         'google_app_id' => $this->getSetting('app_id'),
         'google_scope' => explode('\n', $this->getSetting('scope')),
         'google_class' => $this->getClassName(),
-        'google_view_id' => !empty($this->getSetting('view_id')) ? $this->getSetting('view_id') : 'google.picker.ViewId.DOCS',
+        'google_view_id' => !empty($this->getSetting('view_id')) ? implode(',', $view_ids) : 'google.picker.ViewId.DOCS',
         'google_mine_only' => !empty($this->getSetting('mine_only')) ? $this->getSetting('mine_only') : '',
         'google_nav_hidden' => !empty($this->getSetting('nav_hidden')) ? $this->getSetting('nav_hidden') : 'true',
         'google_support_drives' => !empty($this->getSetting('support_drives')) ? $this->getSetting('support_drives') : '',
@@ -89,11 +95,24 @@ class GoogleDrive extends ExternalMediaBase {
       '#default_value' => $this->getSetting('app_id'),
       '#description' => $this->t('Its the first number in your Client ID. e.g. <em>886162316824</em>'),
     ];
-    $form[$this->getPluginId()]['googledrive_view_id'] = [
-      '#title' => $this->t('View ID'),
-      '#type' => 'select',
+    $googledrive_view_type = 'selected';
+    if ($this->getSetting('view_id') == 'google.picker.ViewId.DOCS') {
+      $googledrive_view_type = 'all_doc_types';
+    }
+    $form[$this->getPluginId()]['googledrive_view_type'] = [
+      '#title' => $this->t('View Type'),
+      '#type' => 'radios',
       '#options' => [
-        'google.picker.ViewId.DOCS' => $this->t('All Google Drive document types'),
+        'all_doc_types' => $this->t('All Google Drive document types'),
+        'selected' => $this->t('Select Views'),
+      ],
+      '#default_value' => !empty($this->getSetting('view_type')) ? $this->getSetting('view_type') : $googledrive_view_type,
+      '#description' => $this->t('Google Drive document type view.'),
+    ];
+    $form[$this->getPluginId()]['googledrive_view_id'] = [
+      '#title' => $this->t('Views'),
+      '#type' => 'checkboxes',
+      '#options' => [
         'google.picker.ViewId.DOCS_IMAGES' => $this->t('Google Drive photos'),
         'google.picker.ViewId.DOCS_IMAGES_AND_VIDEOS' => $this->t('Google Drive photos and videos'),
         'google.picker.ViewId.DOCS_VIDEOS' => $this->t('Google Drive videos'),
@@ -106,7 +125,10 @@ class GoogleDrive extends ExternalMediaBase {
         'google.picker.ViewId.SPREADSHEETS' => $this->t('Google Drive Spreadsheets'),
       ],
       '#default_value' => $this->getSetting('view_id'),
-      '#description' => $this->t('Google Drive document type view.'),
+      '#description' => $this->t('Google Drive document type views.'),
+      '#states' => [
+        'visible' => [':input[name="googledrive_view_type"]' => ['value' => 'selected']]
+      ],
     ];
     $form[$this->getPluginId()]['googledrive_scope'] = [
       '#title' => $this->t('Scope'),
@@ -142,7 +164,8 @@ class GoogleDrive extends ExternalMediaBase {
       ->setSetting('mine_only', $form_state->getValue('googledrive_mine_only'))
       ->setSetting('nav_hidden', $form_state->getValue('googledrive_nav_hidden'))
       ->setSetting('support_drives', $form_state->getValue('googledrive_support_drives'))
-      ->setSetting('scope', $form_state->getValue('googledrive_scope'));
+      ->setSetting('scope', $form_state->getValue('googledrive_scope'))
+      ->setSetting('view_type', $form_state->getValue('googledrive_view_type'));
   }
 
   /**
