@@ -28,6 +28,7 @@ class OneDrive extends ExternalMediaBase {
         'onedrive_client_id' => $this->getSetting('onedrive_picker'),
         'onedrive_class' => $this->getClassName(),
         'onedrive_redirect_url' => $this->getRedirectUrl()->toString() . '?q=' . uniqid(), // ?q= to make sure page doesn't get cached.
+        'onedrive_auth_endpoint' => $this->getSetting('onedrive_auth_endpoint'),
       ],
     ];
   }
@@ -58,10 +59,27 @@ class OneDrive extends ExternalMediaBase {
       '#default_value' => $this->getSetting('onedrive_picker'),
       '#description' => $this->t('Please <a href="https://apps.dev.microsoft.com/?mkt=en-us" target="_blank">Register your app</a> to get an Application (client) ID, if you haven\'t already done so. '
         . 'Ensure that the web page that is going to reference the SDK is a <em>Redirect URL</em> under <strong>Redirect URIs (Web platform)</strong>. Enable <strong>Implicit grant</strong> and make sure <strong>Access Tokens</strong> and <strong>ID Tokens</strong> checked. Set <strong>Treat application as a public client</strong> to Yes.'
-      ),
+      )
+    ];
+    $form[$this->getPluginId()]['onedrive_auth_endpoint'] = [
+      '#title' => $this->t('Tenant authorization URL (single-tenant only).'),
+      '#type' => 'textfield',
+      '#default_value' => $this->getSetting('onedrive_auth_endpoint'),
+      '#description' => $this->t('Custom authorization endpoint URL. '
+        . 'See <a href="https://docs.microsoft.com/en-us/azure/active-directory/develop/single-and-multi-tenant-apps#main">Tenancy in Active Directory</a>. '
+        . 'Leave blank to use as a multi-tenant app, i.e., to not restrict app access to users from just one domain.'),
     ];
 
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigForm(array &$form, FormStateInterface $form_state) {
+    $this
+      ->setSetting('onedrive_picker', $form_state->getValue('onedrive_picker'))
+      ->setSetting('onedrive_auth_endpoint', $form_state->getValue('onedrive_auth_endpoint'));
   }
 
   /**

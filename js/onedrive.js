@@ -66,6 +66,9 @@
             redirectUri: settings.onedrive_redirect_url,
             scopes: 'Files.ReadWrite'
           },
+        };
+        if (settings.onedrive_auth_endpoint) {
+          pickerOptions.advanced.endpointHint = settings.onedrive_auth_endpoint;
         }
 
         OneDrive.open(pickerOptions);
